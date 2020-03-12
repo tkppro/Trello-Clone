@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Board;
 use Illuminate\Http\Request;
 use App\Http\Requests\CreateBoardRequest;
-use Auth;
+
 
 class BoardController extends Controller
 {
@@ -17,7 +17,7 @@ class BoardController extends Controller
      */
     public function index()
     {
-        return response()->json(Auth::user()->boards()->get(), 200);
+        return response()->json(auth()->user()->boards()->get(), 200);
     }
 
     /**
@@ -30,7 +30,7 @@ class BoardController extends Controller
     {
         $board = Board::create([
             'name' => $request->name,
-            'user_id' => Auth::user()->id,
+            'user_id' => auth()->user()->id,
         ]);
 
         return response()->json([
@@ -47,7 +47,10 @@ class BoardController extends Controller
      */
     public function show(Board $board)
     {
-        $board = Board::with('tasks.cards')->findOrFail($board->id);
+        if ($board->user_id != auth()->user()->id)
+            return response()->json('Unauthorized!', 401);
+        
+            $board = Board::with('tasks.cards')->findOrFail($board->id);
         
         return response()->json($board, 200);
     }

@@ -15,7 +15,7 @@
             </v-card-title>
             <v-card-text>
                 <v-form class="px-3" ref="form">
-                    <v-text-field @keyup.enter="submit" label="Name" v-model="name" prepend-icon="mdi-folder" :rules="inputRules"></v-text-field>
+                    <v-text-field @keydown.enter.prevent="submit" label="Name" v-model="name" prepend-icon="mdi-folder" :rules="inputRules"></v-text-field>
                     <v-btn :loading="isLoading" class="success mx-0 mt-3" @click="submit">Add task</v-btn>
                 </v-form>
             </v-card-text>
@@ -37,7 +37,7 @@ export default {
         }
     },
     methods: {
-        submit() {
+        submit(e) {
             if (this.$refs.form.validate()) {
                 this.isLoading = true;
                 const task = {

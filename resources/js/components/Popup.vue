@@ -10,7 +10,7 @@
             </v-card-title>
             <v-card-text>
                 <v-form class="px-3" ref="form">
-                    <v-text-field label="Name" v-model="name" prepend-icon="mdi-folder" :rules="inputRules"></v-text-field>
+                    <v-text-field @keydown.enter.prevent="submit" label="Name" v-model="name" prepend-icon="mdi-folder" :rules="inputRules"></v-text-field>
                     <!-- <v-menu max-width="290">
                         <template v-slot:activator="{ on }">
                             <v-text-field :rules="inputRules" :value="formattedDate" label="Due date" prepend-icon="mdi-calendar-range" v-on="on"></v-text-field>

@@ -44,9 +44,13 @@ class CardController extends Controller
      */
     public function show(Card $card)
     {
-        $data = Card::with('comments')->findOrfail($card->id);
+        $card = Card::with('comments')->findOrFail($card->id);
+        
+        if (auth()->user()->id != $card->task->board->user_id) {
+            return response()->json('Unauthorized!', 401);
+        }
 
-        return response()->json($data, 200);
+        return response()->json($card, 200);
     }
 
     /**
@@ -58,6 +62,10 @@ class CardController extends Controller
      */
     public function update(CreateCardRequest $request, Card $card)
     {
+        if (auth()->user()->id != $card->task->board->user_id) {
+            return response()->json('Unauthorized!', 401);
+        }
+
         $card->update($request->all());
         
         return response()->json([
@@ -74,10 +82,13 @@ class CardController extends Controller
      */
     public function destroy(Card $card)
     {
-        if (Card::findOrFail($card->id)) {
-            $card->delete();
-
-            return response()->json('Deleted card!', 200);
+        if (auth()->user()->id != $card->task->board->user_id) {
+            return response()->json('Unauthorized!', 401);
         }
+
+        if ($card->delete()) 
+            return response()->json('Deleted card!', 200);
+        
     }
+
 }

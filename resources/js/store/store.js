@@ -107,6 +107,34 @@ export const store = new Vuex.Store({
                 'updated_at': data.card.updated_at,
             })
         },
+        updateCard(state, card) {
+            const index = state.tasks.findIndex(item => item.id == card.task_id)
+            const cardIndex = state.tasks[index].cards.findIndex(item => item.id == card.id)
+
+            state.tasks[index].cards.splice(cardIndex, 1, {
+                'id': card.id,
+                'title': card.title,
+                'description': card.description,
+                'order': card.order,
+                'task_id': card.task_id,
+                'archived': card.archived,
+                'created_at': card.created_at,
+                'updated_at': card.updated_at,
+            })
+
+        },
+        deleteCard(state, id) {
+
+            const index = state.tasks.findIndex(item => item.id == id.taskId)
+            const cardIndex = state.tasks[index].cards.findIndex(item => item.id == id.id)
+
+            if (cardIndex >= 0)
+                state.tasks[index].cards.splice(cardIndex, 1)
+        },
+        destroyData(state) {
+            state.boards = []
+            state.tasks = []
+        }
 
     },
     actions: {
@@ -211,7 +239,6 @@ export const store = new Vuex.Store({
 
             axios.get('/boards/' + id)
                 .then(response => {
-                    console.log(response.data)
                     context.commit('retrieveTasks', response.data.tasks)
                         //context.commit('updateLoading', false)
                 })
@@ -265,6 +292,31 @@ export const store = new Vuex.Store({
                     context.commit('addCard', {
                         card: response.data.data,
                         taskId: card.taskId
+                    })
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        },
+        updateCard(context, card) {
+            axios.patch('/cards/' + card.id, {
+                    title: card.title,
+                    description: card.description,
+                    task_id: card.taskId
+                })
+                .then(response => {
+                    context.commit('updateCard', response.data.data)
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        },
+        deleteCard(context, id) {
+            axios.delete('/cards/' + id.id)
+                .then(response => {
+                    context.commit('deleteCard', {
+                        id: id.id,
+                        taskId: id.taskId
                     })
                 })
                 .catch(error => {

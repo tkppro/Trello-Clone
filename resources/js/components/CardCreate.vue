@@ -15,8 +15,8 @@
             </v-card-title>
             <v-card-text>
                 <v-form class="px-3" ref="form">
-                    <v-text-field label="Title" v-model="title" prepend-icon="mdi-folder" :rules="inputRules"></v-text-field>
-                    <v-textarea :rules="inputRules" label="Description" v-model="description" prepend-icon="mdi-pen"></v-textarea>
+                    <v-text-field @keydown.enter.prevent="submit" label="Title" v-model="title" prepend-icon="mdi-folder" :rules="inputRules"></v-text-field>
+                    <v-textarea @keydown.enter.prevent="submit" :rules="inputRules" label="Description" v-model="description" prepend-icon="mdi-pen"></v-textarea>
                     <v-btn :loading="isLoading" class="success mx-0 mt-3" @click="submit">Add Card</v-btn>
                 </v-form>
             </v-card-text>
