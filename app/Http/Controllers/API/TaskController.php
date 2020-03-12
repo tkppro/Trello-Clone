@@ -43,9 +43,9 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
-        // if ($task->board_id != $boardId) {
-        //     return response()->json('Unauthorized!', 401);
-        // }
+        if ($task->board->user_id != auth()->user()->id) {
+            return response()->json('Unauthorized!', 401);
+        }
         
         $data = Task::with('cards')->findOrFail($task->id);
         

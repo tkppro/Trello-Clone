@@ -18,7 +18,7 @@
                     <v-list-item @click="editing = !editing">
                         <v-list-item-title>Edit</v-list-item-title>
                     </v-list-item>
-                    <v-list-item @click="deleteTask(task.id)">
+                    <v-list-item @click="deleteTask(id)">
                         <v-list-item-title>Delete</v-list-item-title>
                     </v-list-item>
                     <v-list-item @click="archiveTask">
@@ -29,14 +29,14 @@
 
         </v-card-title>
         <!-- Card display -->
-        <draggable v-model="task.cards" group="task.cards" style="min-height: 15px" ghost-class="ghost">
-            <v-expansion-panels accordion v-for="card in task.cards" :key="card.id">
-                <Card :card="card" />
+        <draggable :list="task.cards" group="task.cards" :movedTaskId="task.id" @add="onAdd" style="min-height: 15px;" ghost-class="ghost">
+            <v-expansion-panels accordion v-for="card in task.cards" :key="card.id" :cardId="card.id">
+                <Card :card="card" :taskId="fromTaskId"/>
             </v-expansion-panels>
         </draggable>
         
     </v-card>
-    <CardCreate :taskId="task.id"/>
+    <CardCreate :taskId="id"/>
     </div>
 </template>
 
@@ -62,7 +62,9 @@ export default {
             'id': this.task.id,
             'name': this.task.name,
             'beforeEditCache': '',
-            'editing': false
+            'editing': false,
+            'fromTaskId': this.task.id,
+            'toTaskId': this.task.id,
         }
     },
     directives: {
@@ -96,8 +98,19 @@ export default {
         },
         archiveTask() {
 
+        },
+        onAdd(event) {
+           console.log(event)
+            let fromTaskId = event.from.getAttribute('movedTaskId');
+            let cardId = event.item.getAttribute('cardId');
+            let toTaskId = event.to.getAttribute('movedTaskId');
+            // this.changedTaskIdArray = toTaskId
+            // console.log(fromTaskId, toTaskId)
+            // console.log(event.to)
+
+            // this.updateOrderCard(cardId, toTaskId);
         }
-    }
+    },
 }
 </script>
 

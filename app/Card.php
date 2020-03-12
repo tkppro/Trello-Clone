@@ -25,8 +25,8 @@ class Card extends Model
         return $this->hasMany('App\Comment');
     }
 
-    public function list()
+    public function task()
     {
-        return $this->belongsTo('App\List');
+        return $this->belongsTo('App\Task');
     }
 }
